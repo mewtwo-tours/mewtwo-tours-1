@@ -1,19 +1,20 @@
 const express = require('express');
-const db = require('../models/listingModel');
 
 const listingController = require('../controllers/listingController');
+const imageController = require('../controllers/imageController')
 
 const router = express.Router();
 
 //base route returns listings based on location 
 router.get('/', 
-  listingController,
-  (req, res) => res.status(200).json({})
+  listingController.getListings,
+  (req, res) => res.status(200).json(res.locals.listings)
   );
 
-//adds new listing
+//adds new listing, routing to upload image first then pass along url
 router.post('/', 
-  
+  imageController.uploadImage,
+  listingController.postListing,
   (req, res) => {
     console.log('end of middleware cycle');
     res.status(200);
