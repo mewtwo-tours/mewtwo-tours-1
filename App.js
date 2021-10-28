@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
+import MainView from './client/features/main-view/MainView'
 
 const testRoute = () => {
   fetch('http://localhost:3000/testRoute')
@@ -10,13 +11,11 @@ const testRoute = () => {
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <Button
-        onPress={()=>testRoute()}
-      />
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}> 
+      <MainView>
+        
+      </MainView>
+    </SafeAreaView>
   );
 }
 
