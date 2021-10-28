@@ -6,12 +6,15 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const cors = require('cors');
 
+// Routers
+//http://localhost:3434/
+
 //direct controller imports
-const sessionController = require('./controllers/sessionController');
-const cookieController = require('./controllers/cookieController');
+//const sessionController = require('./controllers/sessionController');
+//const cookieController = require('./controllers/cookieController');
 
 //route imports
-// const signupRouter = require('./routes/signupRoute');
+const listingRouter = require('./routes/listingRouter');
 
 
 //db connection
@@ -24,21 +27,26 @@ app.use(cookieParser());
 // server test route
 app.use('/testRoute', (req, res) => {
   //test stuff here
+  console.log('TEST ROUTE HIT')
+  res.send('hello')
 });
 
-//signup route
-app.use('/register', signupRouter);
+// listings route
+app.use('/listings', listingRouter);
+
+// //signup route
+// app.use('/register', signupRouter);
 
 
-//check login route
-app.use('/checkLogin', sessionController.isLoggedIn, (req, res) => {
-  return res.status(299).send('user is logged in');
-});
+// //check login route
+// app.use('/checkLogin', sessionController.isLoggedIn, (req, res) => {
+//   return res.status(299).send('user is logged in');
+// });
 
-//serve index.html - NOTE - THIS ROUTE NEVER ACTUALLY HITS (react router serves up the page??)
-app.get('/', cookieController.setCookie, (req, res) => {
-  return res.status(201).sendFile(path.join(__dirname, '.././index.html'));
-});
+// //serve index.html - NOTE - THIS ROUTE NEVER ACTUALLY HITS (react router serves up the page??)
+// app.get('/', (req, res) => {
+//   //return res.status(201).sendFile(path.join(__dirname, '.././index.html'));
+// });
 
 // Global error handler
 app.use((err, req, res, next) => {
