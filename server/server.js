@@ -48,6 +48,13 @@ app.use('/listings', listingRouter);
 //   //return res.status(201).sendFile(path.join(__dirname, '.././index.html'));
 // });
 
+/**
+ * 404 handler
+ */
+ app.use('*', (req,res) => {
+  res.status(404).send('Not Found');
+});
+
 // Global error handler
 app.use((err, req, res, next) => {
   const defaultErr = {
