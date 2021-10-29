@@ -4,7 +4,7 @@ export const mockData =
       id: 1,
       image: require('../assets/icon.png'),
       title: "Our Wicked Lady",
-      description: "A pirate themed dive bar - cheap drinks by NYC standards, decent food, here are a few more words",
+      description: "A bar about metal and that kind of thing.  Here's some more words, lets fill up another line or two",
       address: "153 Morgan Ave, Brooklyn, NY 11237",
       upvotes: 9000,
       downvotes: 2000
@@ -22,7 +22,7 @@ export const mockData =
       id: 3,
       image: require('../assets/icon.png'),
       title: "Adam's Apartment",
-      description: "A pirate themed dive bar - cheap drinks by NYC standards, decent food, here are a few more words",
+      description: "The owner is a bit weird but great place overall.",
       address: "323 Stagg Street, Brooklyn, NY 11206",
       upvotes: 9001,
       downvotes: 2000
@@ -40,7 +40,7 @@ export const mockData =
       id: 5,
       image: require('../assets/icon.png'),
       title: "Subway",
-      description: "Decent meatball sub",
+      description: "Decent meatball sub, get it with lettuce and tomato, trust me.",
       address: "100 Bushwick Ave, Brooklyn, NY 11206",
       upvotes: 9000,
       downvotes: 2000

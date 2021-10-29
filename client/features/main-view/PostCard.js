@@ -10,14 +10,17 @@ const PostCard = (props) => {
   return (
     <View style={tailwind('bg-blue-200 w-full h-52 border-2 p-2')}>
       <View style={tailwind(' w-full h-full p-2 flex flex-row justify-between')}>
+        {/*onclick to hit individual post route goes here*/}
         <Image 
-          source={require('../../../assets/icon.png')}
+          source={props.image}
           style={tailwind('w-40 h-40')}
         />
           {/*placeholder for upvote downvote */}
-        <View style={tailwind('bg-yellow-200 w-8 mt-3 mb-7')}/>
+        <View style={tailwind('bg-yellow-200 w-9 mt-3 mb-7 flex-col justify-center')}>
+          <Text style={tailwind('text-xs')}>{props.score}</Text>
+        </View>
 
-        <View style={tailwind('bg-green-200 w-48 mb-2')}>
+        <View style={tailwind('w-48 mb-2 ml-2')}>
           <Text style={tailwind('text-lg')}>{props.title}</Text>
           <Text style={tailwind('text-xs font-bold')}>{props.address}</Text>
           <Text style={tailwind('text-xs mt-3')}>{props.description}</Text>

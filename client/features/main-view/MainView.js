@@ -21,6 +21,8 @@ const MainView = () => {
       {currentListings.map((ele, i) => 
         <PostCard 
           key={i}
+          score = {(ele.upvotes - ele.downvotes)}
+          image={ele.image}
           address={ele.address}
           description={ele.description}
           title={ele.title}
