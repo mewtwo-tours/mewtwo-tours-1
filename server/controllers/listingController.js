@@ -37,7 +37,6 @@ listingController.getListings = async (req, res, next) => {
 listingController.postListing = async (req, res, next) => {
 
   const { 
-    id,
     title, 
     description, 
     street_address, 
@@ -53,12 +52,13 @@ listingController.postListing = async (req, res, next) => {
   const imageInfo = res.locals.imageInfo;
 
   try{
+
+    //using auto-generated uuids for listings
     const listingQueryString = 
       `INSERT INTO public.Listings 
-      (id, title, description, street_address, city, state, 
+      (title, description, street_address, city, state, 
       lattitude, longitude, upvote, posted_by) 
       VALUES (
-        '${id}',
         '${title}',  
         '${description}', 
         '${street_address}', 
@@ -68,7 +68,7 @@ listingController.postListing = async (req, res, next) => {
         '${longitude}', 
         '${upvote}', 
         '${posted_by}'
-        );`;
+        ) returning id;`;
 
     const imageQueryString = 
       `INSERT INTO public.Images 
@@ -77,6 +77,7 @@ listingController.postListing = async (req, res, next) => {
     
 
     const listings = await db.query(listingQueryString)
+    
     await db.query(imageQueryString);
     res.locals.listings = listings;
     
@@ -103,17 +104,17 @@ listingController.getOneListing = async (req, res, next) => {
       SELECT * FROM public.Images
       WHERE Images.listing_id=${listing_id};`;
       
-    const discussionQueryString = `
+    const commentsQueryString = `
       SELECT * FROM public.Discussions
-      WHERE Discussions.listing_id=${listing_id};`;
+      WHERE Comments.listing_id=${listing_id};`;
       
     const listing = await db.query(listingQueryString);
     const images = await db.query(imageQueryString);
-    const discussions = await db.query(discussionQueryString);
+    const comments = await db.query(discussionQueryString);
 
     res.locals.listings = listings;
     res.locals.images = images;
-    res.locals.discussions = discussions;
+    res.locals.comments = comments;
     
     return next();
   } catch(err){
