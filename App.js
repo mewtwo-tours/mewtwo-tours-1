@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
 import MainView from './client/features/main-view/MainView'
+import { Provider } from 'react-redux';
+import store from './client/store/store';
 
 const testRoute = () => {
   fetch('http://localhost:3000/testRoute')
@@ -11,11 +13,12 @@ const testRoute = () => {
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}> 
-      <MainView>
-        
-      </MainView>
-    </SafeAreaView>
+    <Provider store = {store}>
+      <SafeAreaView style={styles.container}> 
+        <MainView> 
+        </MainView>
+      </SafeAreaView>
+    </Provider>
   );
 }
 
