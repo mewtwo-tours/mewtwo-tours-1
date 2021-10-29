@@ -28,14 +28,20 @@ const PostCard = (props) => {
          
         <View style={tailwind('w-9 mt-3 mb-7 flex-col justify-center')}>
         <TouchableOpacity
-            onPress={()=>props.upvote()}
+            onPress={()=>{
+              props.upvote();
+              updateScore(score + 1);
+            }}
             style={tailwind('bg-green-200 items-center')}  
           >
             <Text>U</Text>
           </TouchableOpacity>
           <Text style={tailwind('text-xs')}>{score}</Text>
           <TouchableOpacity
-            onPress={()=>props.downvote()}
+            onPress={()=>{
+              props.downvote();
+              updateScore(score - 1)
+            }}
             style={tailwind('bg-green-200 items-center')}  
           >
             <Text>D</Text>

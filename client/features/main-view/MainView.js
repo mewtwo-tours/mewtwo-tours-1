@@ -21,9 +21,7 @@ const MainView = () => {
   if (loading) {
     console.log('inside loading')
     dispatch(getListings(mockData))
-    
     dispatch(setLoading(false))
-    
     return (
       <Text style={tailwind('text-3xl')}>LOADING ...............</Text>
     )
