@@ -110,7 +110,7 @@ listingController.getOneListing = async (req, res, next) => {
       
     const listing = await db.query(listingQueryString);
     const images = await db.query(imageQueryString);
-    const comments = await db.query(discussionQueryString);
+    const comments = await db.query(commentsQueryString);
 
     res.locals.listings = listings;
     res.locals.images = images;
