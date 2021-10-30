@@ -5,20 +5,40 @@ import MainView from './client/features/main-view/MainView'
 import { Provider } from 'react-redux';
 import store from './client/store/store';
 
-const testRoute = () => {
-  fetch('http://localhost:3000/testRoute')
-    .then(console.log('i ddid it'))
-    .catch(console.log('error'))
-}
-
 export default function App() {
+  const messageObj = {
+    location:  '153 Morgan Ave, Brooklyn, NY 11237'
+  };
+
+  const testRoute = () => {
+    fetch('http://localhost:3000/geocode', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(messageObj)
+      })
+      .then((response)=>response.json())
+      .then((data)=>
+      console.log(data))
+      .catch(()=>console.log('testRoute Error'))
+  }
+
   return (
-    <Provider store = {store}>
-      <SafeAreaView style={styles.container}> 
-        <MainView> 
-        </MainView>
-      </SafeAreaView>
-    </Provider>
+    // <Provider store = {store}>
+    //   <SafeAreaView style={styles.container}> 
+    //     <MainView> 
+    //     </MainView>
+    //   </SafeAreaView>
+    // </Provider>
+
+    <View style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
+      <Button
+        onPress={()=>testRoute()}
+      />
+      <StatusBar style="auto" />
+    </View>
   );
 }
 

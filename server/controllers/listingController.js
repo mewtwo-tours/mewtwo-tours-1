@@ -8,8 +8,7 @@ listingController.generateUser = async (req, res, next) => {
   try{
     const SQLQueryString = `INSERT INTO public.user_list (user_name, email, team_name) VALUES ('${name}', '${email}', '${teamName}');`;
     await db.query(SQLQueryString);
-    
-    return next();
+    next();
 } catch(err){
   return next({
     log: 'SQLController.generateUser: ERROR: Error adding user',
