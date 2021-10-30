@@ -66,8 +66,8 @@ export default function App() {
   const [description, setDescription] = useState('');
   const [file, setFile] = useState();
 
-  // useEffect(() => {
-  //   (async () => {
+  //  useEffect(() => {
+  //    (async () => {
   //     if (Platform.OS !== 'web') {
   //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
   //       if (status !== 'granted') {
@@ -75,7 +75,7 @@ export default function App() {
   //       }
   //     }
   //   })();
-  // }, []);
+  //  }, []);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -85,25 +85,36 @@ export default function App() {
       quality: 1,
     });
 
-    console.log(result);
+    //console.log(result);
 
     if (!result.cancelled) {
-      setImages(result.uri);
+      //setImages(result.uri);
+      await postImage(result.uri, "Test-File")
     }
   };
 
-  const postImage = async ({ image, description })=>{
-    //await pickImage()
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("description", description);
+  const postImage = async (image, description)=>{
+    try{
+    //console.log(image)
 
-    const result = await fetch('http://localhost:3000/images/upload', formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+    //const formData = new FormData();
+    //formData.append("image", image);
+    //formData.append("description", description);
+
+    const result = await fetch('http://localhost:3000/images/upload', {
+      method: "POST",
+      //headers: { "Content-Type": "multipart/form-data"},
+      body: 'DDDDDc'
+      //body: formData
     })
     const tempResult = result.data;
+    console.log(tempResult)
     setNewImg(tempResult.imagePath.slice(8));
     return result.data;
+
+    }catch(e){
+      console.log("PostImage Err", e)
+    }
   }
 
   async function submit(event) {
@@ -124,12 +135,12 @@ export default function App() {
     // ------------------------------------------------- //
 
   return (
-    <Provider store = {store}>
-      <SafeAreaView style={styles.container}> 
-        <MainView> 
-        </MainView>
-      </SafeAreaView>
-    </Provider>
+    // <Provider store = {store}>
+    //   <SafeAreaView style={styles.container}> 
+    //     <MainView> 
+    //     </MainView>
+    //   </SafeAreaView>
+    // </Provider>
 
 
     // ------ MapView -------- //
@@ -154,22 +165,23 @@ export default function App() {
 
     // ------ Amazon s3 -------- //
 
-    // <View style={styles.container}>
-    //   <Form  //onSubmit={handleSubmit}
-    //   >
-    //   <Input
-    //     type="file"
-    //     accept="image/*"
-    //     //onPress={postImage}
-    //   ></Input>
+    <View style={styles.container}>
+      <Button onPress={()=>pickImage()} title="Press Me"></Button>
+       {/* <Form  //onSubmit={handleSubmit}
+      >
+      <Input
+        type="file"
+        accept="image/*"
+        //onPress={postImage}
+      ></Input>
       
-    //   <Input
-    //     //onPress={(e) => setDescription(e.target.value)}
-    //     type="text"
-    //   ></Input>
-    //   <Button></Button>
-    // </Form>
-    // </View>
+      <Input
+        //onPress={(e) => setDescription(e.target.value)}
+        type="text"
+      ></Input>
+      // <Button></Button>
+    </Form>  */}
+    </View>
 
   );
 }
