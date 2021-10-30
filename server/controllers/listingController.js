@@ -3,26 +3,27 @@ const db = require('../models/listingModel');
 const listingController = {};
 
 listingController.getListings = async (req, res, next) => {
-  const { lattitude, longitude, radius } = req.query;
+  const { latitude, longitude, radius } = req.query;
 
   //define box around search point, converting miles into degrees
   // 69 miles = ~ 1 degree
-  const upperLat = lattitude + (radius/69);
-  const lowerLat = lattitude - (radius/69);
-  const upperLong = longitude + radius/(Math.abs(Math.cos(Math.PI*lattitude/180))*69);
-  const lowerLong = longitude - radius/(Math.abs(Math.cos(Math.PI*lattitude/180))*69);
+  const upperLat = latitude + (radius/69);
+  const lowerLat = latitude - (radius/69);
+  const upperLong = longitude + radius/(Math.abs(Math.cos(Math.PI*latitude/180))*69);
+  const lowerLong = longitude - radius/(Math.abs(Math.cos(Math.PI*latitude/180))*69);
 
   try{
     //select all columns from listings where query location is between the upper and lower bounds
     const listingQueryString = `
-      SELECT * FROM public.Listings
-      WHERE Listings.longitude between '${upperLong}' and '${lowerLong}'
-      and Listings.lattitude between '${upperLat}' and '${lowerLat}';`;
+      SELECT * 
+      FROM listings
+      JOIN images ON images.listing_id = listings.id
+      WHERE listings.longitude between ${lowerLong} and ${upperLong}  
+      and listings.latitude between ${lowerLat} and ${upperLat}
+      ORDER BY images.listing_id;`
+
     const listings = await db.query(listingQueryString);
-
-    //need to perform and inner join here to get discussion, picutes, etc
-    const listingID = listings
-
+    
     res.locals.listings = listings;
     
     return next();
@@ -42,7 +43,7 @@ listingController.postListing = async (req, res, next) => {
     street_address, 
     city, 
     state, 
-    lattitude, 
+    latitude, 
     longitude, 
     upvote, 
     posted_by 
@@ -55,31 +56,25 @@ listingController.postListing = async (req, res, next) => {
 
     //using auto-generated uuids for listings
     const listingQueryString = 
-      `INSERT INTO public.Listings 
+      `INSERT INTO listings 
       (title, description, street_address, city, state, 
-      lattitude, longitude, upvote, posted_by) 
+        latitude, longitude, upvote, posted_by) 
       VALUES (
         '${title}',  
         '${description}', 
         '${street_address}', 
         '${city}', 
         '${state}', 
-        '${lattitude}', 
+        '${latitude}', 
         '${longitude}', 
         '${upvote}', 
         '${posted_by}'
         ) returning id;`;
 
-    const imageQueryString = 
-      `INSERT INTO public.Images 
-      (id, description, listing_id, url) 
-      VALUES ${imageInfo};`;
-    
-
     const listings = await db.query(listingQueryString)
     
     await db.query(imageQueryString);
-    res.locals.listings = listings;
+    res.locals.listing_id = listings.rows[0];
     
     return next();
   } catch(err){
@@ -97,16 +92,16 @@ listingController.getOneListing = async (req, res, next) => {
     //select all columns from specified listing based on id
     //////////POTENTIAL TO OPTIMIZE BY NOT REFETCHING DATA 
     const listingQueryString = `
-      SELECT * FROM public.Listings
-      WHERE Listings.id=${listing_id};`;
+      SELECT * FROM listings
+      WHERE listings.id=${listing_id};`;
 
     const imageQueryString = `
-      SELECT * FROM public.Images
-      WHERE Images.listing_id=${listing_id};`;
+      SELECT * FROM images
+      WHERE images.listing_id=${listing_id};`;
       
     const commentsQueryString = `
-      SELECT * FROM public.Discussions
-      WHERE Comments.listing_id=${listing_id};`;
+      SELECT * FROM comments
+      WHERE comments.listing_id=${listing_id};`;
       
     const listing = await db.query(listingQueryString);
     const images = await db.query(imageQueryString);
