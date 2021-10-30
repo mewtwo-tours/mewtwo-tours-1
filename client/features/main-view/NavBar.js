@@ -17,6 +17,7 @@ const NavBar = () => {
           onPress={() => navigation.navigate('CreatePost')}>
           <Text style={tailwind('text-xs')}>Post</Text>
         </TouchableOpacity>
+        
       </View>
   
   )
