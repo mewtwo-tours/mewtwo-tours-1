@@ -15,4 +15,6 @@ imageControllerSQL.getImage = async (req, res, next) => {
   }
 };
 
+// we need to post image, we should probably store image with other information all together.
+
 module.exports = imageControllerSQL;
