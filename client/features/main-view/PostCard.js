@@ -8,13 +8,9 @@ const PostCard = (props) => {
   /*
   TODO:
   -how to make it so if you press bg or picture (maybe just picture?) it goes to post view?
-  -upvote function - send upvote to backend AND update it in state?
-  -downvote function - send downvote to backend AND update it in state?
   */
  const [score, updateScore] = useState(props.score);
 
-//  const upVoteFn = () => updateScore(score + 1);
-//  const downVoteFn = () => updateScore(score - 1);
 
 
   return (
