@@ -93,7 +93,7 @@ export default function App() {
   };
 
   const postImage = async ({ image, description })=>{
-    await pickImage
+    //await pickImage()
     const formData = new FormData();
     formData.append("image", image);
     formData.append("description", description);
