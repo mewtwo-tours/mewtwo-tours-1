@@ -8,6 +8,7 @@ const cors = require('cors');
 //route imports
 const listingRouter = require('./routes/listingRouter');
 const geocodeRouter = require('./routes/geocodeRouter')
+const imagesRouter = require('./routes/imagesRouter')
 
 //db connection
 app.use(cors());
@@ -17,6 +18,8 @@ app.use(cookieParser());
 
 app.use('/geocode', geocodeRouter);
 app.use('/listings', listingRouter);
+app.use('/images', imagesRouter)
+
 
 app.get('/', (req, res) => {
   return res.send("ddd")
