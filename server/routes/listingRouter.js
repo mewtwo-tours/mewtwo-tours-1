@@ -1,7 +1,7 @@
 const express = require('express');
 
 const listingController = require('../controllers/listingController');
-const imageController = require('../controllers/imageController')
+const imageController = require('../controllers/imageController');
 
 const router = express.Router();
 
@@ -16,7 +16,6 @@ router.post('/',
   imageController.uploadImage,
   listingController.postListing,
   (req, res) => {
-    console.log('end of middleware cycle');
     res.status(200);
   });
 module.exports = router;
