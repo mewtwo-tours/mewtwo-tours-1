@@ -71,13 +71,11 @@ export default function App() {
       quality: 1,
     });
     if (!result.cancelled) {
-      //setImages(result.uri);
       let localUri = result.uri;
       let fileName = localUri.split('/').pop();
        // Infer the type of the image
       let match = /\.(\w+)$/.exec(fileName);
       let type = match ? `image/${match[1]}` : `image`;
-      //console.log(fileName, type)
       await postImage(localUri, fileName, type)
     }
   };
