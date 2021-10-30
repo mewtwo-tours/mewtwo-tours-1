@@ -26,6 +26,7 @@ app.get('/', (req, res) => {
   //return res.status(201).sendFile(path.join(__dirname, '.././index.html'));
 });
 
+
 // Global error handler
 app.use((err, req, res, next) => {
   const defaultErr = {
@@ -42,5 +43,7 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
   console.log('Server listening on 3000');
 });
+
+
 
 module.exports = app;

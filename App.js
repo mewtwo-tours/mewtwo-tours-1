@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, Form, Input, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, Form, Input, Dimensions, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
@@ -61,21 +61,7 @@ export default function App() {
 
 
   // --------------- Amazon s3 snippet --------------- //
-  const [newImg, setNewImg] = useState("");
-  const [images, setImages] = useState([]);
-  const [description, setDescription] = useState('');
-  const [file, setFile] = useState();
-
-  //  useEffect(() => {
-  //    (async () => {
-  //     if (Platform.OS !== 'web') {
-  //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //       if (status !== 'granted') {
-  //         alert('Sorry, we need camera roll permissions to make this work!');
-  //       }
-  //     }
-  //   })();
-  //  }, []);
+  const [images, setImages] = useState('');
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -84,56 +70,37 @@ export default function App() {
       aspect: [4, 3],
       quality: 1,
     });
-
-    //console.log(result);
-
     if (!result.cancelled) {
       //setImages(result.uri);
-      await postImage(result.uri, "Test-File")
+      let localUri = result.uri;
+      let fileName = localUri.split('/').pop();
+       // Infer the type of the image
+      let match = /\.(\w+)$/.exec(fileName);
+      let type = match ? `image/${match[1]}` : `image`;
+      //console.log(fileName, type)
+      await postImage(localUri, fileName, type)
     }
   };
 
-  const postImage = async (image, description)=>{
+  const postImage = async (localUri, fileName, type)=>{
     try{
-    //console.log(image)
-
-    //const formData = new FormData();
-    //formData.append("image", image);
-    //formData.append("description", description);
-
-    const result = await fetch('http://localhost:3000/images/upload', {
+    const formData = new FormData();
+    formData.append("image", { uri: localUri, name: fileName, type });
+    const result = await fetch('http://10.0.0.9:3000/images/upload', {
       method: "POST",
-      //headers: { "Content-Type": "multipart/form-data"},
-      body: 'DDDDDc'
-      //body: formData
+      headers: { "Content-Type": "multipart/form-data"},
+      body: formData
     })
-    const tempResult = result.data;
-    console.log(tempResult)
-    setNewImg(tempResult.imagePath.slice(8));
-    return result.data;
-
+    .then(res=> res.json())
+    .catch(err=>console.log(err))
+    setImages(result.imageKey)
     }catch(e){
       console.log("PostImage Err", e)
     }
   }
 
-  async function submit(event) {
-    const result = await postImage({ image: file, description });
-    setImages([result.image, ...images]);
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    submit(event);
-  };
-
-  const fileSelected = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
-  };
-
     // ------------------------------------------------- //
-
+  
   return (
     // <Provider store = {store}>
     //   <SafeAreaView style={styles.container}> 
@@ -167,20 +134,12 @@ export default function App() {
 
     <View style={styles.container}>
       <Button onPress={()=>pickImage()} title="Press Me"></Button>
-       {/* <Form  //onSubmit={handleSubmit}
-      >
-      <Input
-        type="file"
-        accept="image/*"
-        //onPress={postImage}
-      ></Input>
-      
-      <Input
-        //onPress={(e) => setDescription(e.target.value)}
-        type="text"
-      ></Input>
-      // <Button></Button>
-    </Form>  */}
+      <Image source={{
+        uri: `http://10.0.0.9:3000/images/show/${images}`,
+        method: 'GET'
+      }}
+      style={{ width: 400, height: 400 }}
+      />
     </View>
 
   );
