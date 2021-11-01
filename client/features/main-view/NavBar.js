@@ -9,13 +9,22 @@ const NavBar = () => {
   const navigation = useNavigation()
 
   return (
-      <View style={tailwind('h-12 w-full self-center border-black border-2')}>
+      <View style={{backgroundColor: '#FFA400', ...tailwind('h-12 w-full self-center border-black border-2 flex-row justify-around')}}>
+        <TouchableOpacity
+          style={tailwind('self-center')}
+          onPress={() => navigation.navigate('Main')}>
+          <Ionicons name="home-outline" size={40} color="black" />
+        </TouchableOpacity>
         <TouchableOpacity
           style={tailwind('self-center')}
           onPress={() => navigation.navigate('CreatePost')}>
           <Ionicons name="md-add-circle-outline" size={40} color="black" />
         </TouchableOpacity>
-        
+        <TouchableOpacity
+          style={tailwind('self-center')}
+          onPress={() => navigation.navigate('CreatePost')}>
+          <Ionicons name="person-outline" size={40} color="black" />
+        </TouchableOpacity>
       </View>
   
   )

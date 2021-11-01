@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, ScrollView, SafeAreaView, TextInput, TouchableO
 import { useSelector, useDispatch } from 'react-redux'
 import tailwind from 'tailwind-rn';
 import ImageUpload from '../image-upload/ImageUpload';
+import NavBar from '../main-view/NavBar';
+import { MaterialIcons } from '@expo/vector-icons'; 
 
 const CreatePost = () => {
 
@@ -33,45 +35,50 @@ const CreatePost = () => {
   
 
   return (
-    <ScrollView>
-      <Text style={tailwind('text-xl self-center')}>
-        Create a Post
-      </Text>
-      <View style={tailwind('w-full border-2')}/>
-      <Text>
-        Location Name
-      </Text>
-      <TextInput
-        style={tailwind('h-8 w-60 border-2')}
-        onChangeText={createTitle}
-        value={title}   
-      />
-      <Text>
-        Location Address
-      </Text>
-      <TextInput
-      style={tailwind('h-8 w-60 border-2')}
-        onChangeText={createAddress}
-        value={address}   
-      />
-      <Text>
-        Short Description
-      </Text>
-      <TextInput
-        multiline
-        numberOfLines={3}
-        style={tailwind('border-2 h-24 w-60')}
-        onChangeText={createDescription}
-        value={description}   
-      />
-      <View style={tailwind('bg-red-200 h-8 w-10 self-center')}>
-        <TouchableOpacity
-          onPress={() => sendReq()}>
-          <Text style={tailwind('text-xs')}>Post it!</Text>
-        </TouchableOpacity>
-      </View>
-      <ImageUpload/>
-    </ScrollView>
+    <View style={{
+      backgroundColor: '#F1F2F6',
+      ...tailwind('h-full w-full flex-col')}}>
+      <ScrollView>
+        <Text style={tailwind('text-3xl self-center font-extrabold')}>
+          Create a Post
+        </Text>
+        <View style={{borderColor: '#FFA400', ...tailwind('w-full border-4')}}/>
+        <Text>
+          Location Name
+        </Text>
+        <TextInput
+          style={tailwind('h-8 w-60 border-2 ml-2.5')}
+          onChangeText={createTitle}
+          value={title}   
+        />
+        <Text>
+          Location Address
+        </Text>
+        <TextInput
+        style={tailwind('h-8 w-60 border-2 ml-2.5')}
+          onChangeText={createAddress}
+          value={address}   
+        />
+        <Text>
+          Short Description
+        </Text>
+        <TextInput
+          multiline
+          numberOfLines={3}
+          style={tailwind('border-2 h-24 w-60 ml-2.5')}
+          onChangeText={createDescription}
+          value={description}   
+        />
+        <View style={tailwind('h-20 w-full self-center')}>
+          <Text style={tailwind('text-2xl self-center font-extrabold')}>Add it!</Text>
+          <TouchableOpacity style={tailwind('self-center')}
+            onPress={() => sendReq()}>
+            <MaterialIcons name="add-business" size={50} color="black" />
+          </TouchableOpacity>
+        </View>        
+      </ScrollView>
+      <NavBar></NavBar>
+    </View>
   )
 }
 
