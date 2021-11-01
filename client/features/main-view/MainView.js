@@ -11,12 +11,11 @@ import NavBar from './NavBar';
 
 const MainView = () => {
 
-  //conditional to only fetch on first render
-
   const dispatch = useDispatch();
   let currentListings = useSelector((state) => state.listings.currentListings)
   const { loading } = useSelector((state) => state.listings)
   console.log(currentListings)
+
 
     // --------------- MapView stuff ----------------- //
     const [currlocation, setCurrLocation] = useState(null);
@@ -117,19 +116,22 @@ const MainView = () => {
     )
 
   } else return (
-    <View style={tailwind('h-full w-full flex-col justify-center bg-red-900')}>
+    <View style={{
+      backgroundColor: '#FFA400',
+      ...tailwind('h-full w-full flex-col justify-center')}}>
       <ScrollView style={tailwind('h-full w-full bg-red-100')}>
         {currentListings.map((ele, i) => 
           <PostCard 
             key={i}
+            idx={i}
             listingId={ele.id}
             score = {(ele.upvotes - ele.downvotes)}
             image={ele.image}
             address={ele.address}
             description={ele.description}
             title={ele.title}
-            upvote={()=>{dispatch(upvote(i))}}
-            downvote={()=>{dispatch(downvote(i))}}
+            // upvote={()=>{dispatch(upvote(i))}}
+            // downvote={()=>{dispatch(downvote(i))}}
           />
         )}
       </ScrollView>
