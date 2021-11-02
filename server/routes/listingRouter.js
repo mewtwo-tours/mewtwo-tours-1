@@ -1,19 +1,32 @@
 const express = require('express');
-const db = require('../models/listingModel');
+const multer = require('multer'); //Lets us recieve images on express server
+const upload = multer({ dest: 'uploads/' }); // specifying the destination for all the files uploaded to the server
 
 const listingController = require('../controllers/listingController');
+const imageController = require('../controllers/imageController');
 
 const router = express.Router();
 
 //base route returns listings based on location 
-router.get('/', listingController.generateUser, 
-(req, res) => res.status(200).json("Nada"));
+router.get('/', 
+  listingController.getListings,
+  (req, res) => res.status(200).json(res.locals.listings)
+  );
 
-//adds new listing
-router.post('/', 
+  
+/*
+1) add listing to database, returning listing id
+2) save listing id to locals
+3) upload image to S3, returning key
+3) add image key and listing id to images table on database
+
+*/
+router.post('/',
+  listingController.postListing,
+  upload.single('image'), //Accept a single file with the name 'image'. The single file will be stored in req.file 
+  imageController.uploadImage,
   (req, res) => {
-    console.log('end of middleware cycle');
-    return res.status(200).send("Good Job!");
+    res.status(200);
   });
 
 module.exports = router;
