@@ -2,6 +2,45 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, Platform, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
+//  // --------------- Amazon s3 snippet --------------- //
+//  const [images, setImages] = useState('');
+
+//  const pickImage = async () => {
+//    let result = await ImagePicker.launchImageLibraryAsync({
+//      mediaTypes: ImagePicker.MediaTypeOptions.All,
+//      allowsEditing: true,
+//      aspect: [4, 3],
+//      quality: 1,
+//    });
+//    if (!result.cancelled) {
+//      let localUri = result.uri;
+//      let fileName = localUri.split('/').pop();
+//       // Infer the type of the image
+//      let match = /\.(\w+)$/.exec(fileName);
+//      let type = match ? `image/${match[1]}` : `image`;
+//      await postImage(localUri, fileName, type)
+//    }
+//  };
+
+//  const postImage = async (localUri, fileName, type)=>{
+//    try{
+//    const formData = new FormData();
+//    formData.append("image", { uri: localUri, name: fileName, type });
+//    const result = await fetch('http://10.0.0.9:3000/images/upload', {
+//      method: "POST",
+//      headers: { "Content-Type": "multipart/form-data"},
+//      body: formData
+//    })
+//    .then(res=> res.json())
+//    .catch(err=>console.log(err))
+//    setImages(result.imageKey)
+//    }catch(e){
+//      console.log("PostImage Err", e)
+//    }
+//  }
+
+//    // ------------------------------------------------- //
+
 export default function ImageUpload() {
   const [image, setImage] = useState(null);
   const addImage=()=>{};

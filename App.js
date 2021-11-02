@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, Form, Input, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, Form, Input, Dimensions, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
