@@ -34,13 +34,9 @@
     "react-native-web-image-picker": "0.0.0-alpha.1",
     "react-redux": "^7.2.6",
     "redux": "^4.1.1",
-<<<<<<< HEAD
     "tailwind-rn": "^3.0.1",
     "react-native-screens": "~3.8.0",
     "react-native-safe-area-context": "3.3.2"
-=======
-    "tailwind-rn": "^3.0.1"
->>>>>>> dev
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
