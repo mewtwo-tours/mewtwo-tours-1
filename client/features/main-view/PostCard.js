@@ -30,7 +30,7 @@ const PostCard = (props) => {
  const upvoteFn = (post) => {
   const upvoteMsg = {
     username: "adam123",
-    id: 'tempid'
+    id: 'tempid' //this will be post.id
   }
   const route = upvoted ? 'downvote' : 'upvote'
   fetch(`http://localhost:3000/${route}`, {

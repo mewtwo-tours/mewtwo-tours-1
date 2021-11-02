@@ -5,6 +5,7 @@ import tailwind from 'tailwind-rn';
 import ImageUpload from '../image-upload/ImageUpload';
 import NavBar from '../main-view/NavBar';
 import { MaterialIcons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
 
 const CreatePost = () => {
 
@@ -69,8 +70,13 @@ const CreatePost = () => {
           onChangeText={createDescription}
           value={description}   
         />
+        <Text>Add Image</Text>
+        <TouchableOpacity style={tailwind('ml-2.5')}>
+          <Ionicons name="image-outline" size={30} color="black" />
+        </TouchableOpacity>
+        
         <View style={tailwind('h-20 w-full self-center')}>
-          <Text style={tailwind('text-2xl self-center font-extrabold')}>Add it!</Text>
+          <Text style={tailwind('text-2xl self-center font-extrabold')}>Create Post</Text>
           <TouchableOpacity style={tailwind('self-center')}
             onPress={() => sendReq()}>
             <MaterialIcons name="add-business" size={50} color="black" />
