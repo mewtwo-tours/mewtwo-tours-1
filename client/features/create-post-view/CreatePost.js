@@ -11,13 +11,20 @@ import { Ionicons } from '@expo/vector-icons';
 
 const CreatePost = () => {
 
+  /*TODO
+    -refactor so only one request (split req body into two parts)
+  */
+
   const [title, createTitle] = useState('');
   const [description, createDescription] = useState('');
   const [address, createAddress] = useState('')
   const [city, createCity] = useState('');
   const [state, createState] = useState('')
   //image
-  const [images, setImages] = useState('');
+  //const [images, setImages] = useState('');
+  const [localUri, setLocalUri] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [type, setType] = useState('');
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -27,52 +34,67 @@ const CreatePost = () => {
       quality: 1,
     });
     if (!result.cancelled) {
-      let localUri = result.uri;
-      let fileName = localUri.split('/').pop();
+      let localUriTemp = result.uri;
+      let fileNameTemp = localUri.split('/').pop();
       // Infer the type of the image
       let match = /\.(\w+)$/.exec(fileName);
-      let type = match ? `image/${match[1]}` : `image`;
-      await postImage(localUri, fileName, type)
+      let typeTemp = match ? `image/${match[1]}` : `image`;
+      //await postImage(localUri, fileName, type)
+      setFileName(fileNameTemp);
+      setType(typeTemp);
+      setLocalUri(localUriTemp);
+      console.log('image stuff:', fileName, type, localUri)
     }
   };
   
-   const postImage = async (localUri, fileName, type)=>{
-     try{
-     const formData = new FormData();
-     formData.append("image", { uri: localUri, name: fileName, type });
-     const result = await fetch('http://192.168.1.4:3000/images/upload', {
-       method: "POST",
-       headers: { "Content-Type": "multipart/form-data"},
-       body: formData
-     })
-     .then(res=> res.json())
-     .then(console.log(images))
-     .catch(err=>console.log(err))
-     setImages(result.imageKey)
-     }catch(e){
-       console.log("PostImage Err", e)
-     }
-   }
+  //  const postImage = async (localUri, fileName, type)=>{
+  //    try{
+  //    const formData = new FormData();
+  //    formData.append("image", { uri: localUri, name: fileName, type });
+  //    const result = await fetch('http://192.168.1.4:3000/images/upload', {
+  //      method: "POST",
+  //      headers: { "Content-Type": "multipart/form-data"},
+  //      body: formData
+  //    })
+  //    .then(res=> res.json())
+  //    .then(console.log(images))
+  //    .catch(err=>console.log(err))
+  //    setImages(result.imageKey)
+  //    }catch(e){
+  //      console.log("PostImage Err", e)
+  //    }
+  //  }
   const sendReq = () => {
-    const reqBody = {
-      image: images,
-      title: title,
-      description: description,
-      street_address: address,
-      city: city,
-      state: state
-    }
 
-    fetch('http://192.168.1.4:3000/addPost', {
+    const formData = new FormData();
+    formData.append("image", { uri: localUri, name: fileName, type: type });
+    // formData.append("main", reqBody)
+    const reqBody = {
+        
+        //image: images,
+        title: title,
+        description: description,
+        street_address: address,
+        city: city,
+        state: state,
+        upvote: 1,
+        //***HARD CODED */
+        //posted_by: null
+      
+    }
+    formData.main = reqBody
+    console.log('FORM DATA:', formData)
+
+    fetch('http://192.168.1.4:3000/listings', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(reqBody)
+      body: JSON.stringify(formData)
     })
     .then((response)=>response.json())
     .then((data)=>
-    console.log(data))
+      console.log(data))
     .catch(()=>console.log('CreatePost Error, req body is ', reqBody))
   }
   
@@ -108,7 +130,7 @@ const CreatePost = () => {
         <TextInput
           style={tailwind('h-8 w-60 border-2 ml-2.5')}
           onChangeText={createCity}
-          value={address}   
+          value={city}   
         />
         <Text>
           State
@@ -116,7 +138,7 @@ const CreatePost = () => {
         <TextInput
           style={tailwind('h-8 w-60 border-2 ml-2.5')}
           onChangeText={createState}
-          value={address}   
+          value={state}   
         />
         <Text>
           Short Description

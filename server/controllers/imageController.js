@@ -1,5 +1,5 @@
 const db = require('../models/listingModel');
-const multer = require('multer'); //Lets us recieve images on express server
+const multer = require('multer');
 const fs = require('fs');
 const util = require('util');
 const unlikeFile = util.promisify(fs.unlink); //It is used to convert a method that returns responses using a callback function to return responses in a promise object
@@ -12,10 +12,12 @@ imageController.getImage = async (req, res, next) => {
 }
 imageController.uploadImage = async (req, res, next) => {
 
-  const { description } = req.body
+  // const { description } = req.body
   try{
     const file = req.file;
     const result = await uploadFile(file); //Upload the file
+    console.log("File: ", file)
+    console.log("Result:", result)
     await unlikeFile(file.path); //Delete the file after uploading it to s3
     
    

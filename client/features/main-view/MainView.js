@@ -16,10 +16,28 @@ const MainView = () => {
   const { loading } = useSelector((state) => state.listings)
   console.log(currentListings)
 
+  const fetchListings = () => {
+    const {latitude, longitude} = currlocation.coords;
+    fetch('http://localhost:3000/listings', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        latitude: latitude,
+        longitude: longitude
+      })
+    })
+    .then((response)=>response.json())
+    .then((data)=>
+    console.log(data))
+    .catch(()=>console.log('fetchListings error'))
+  }
 
-    // --------------- MapView stuff ----------------- //
-    const [currlocation, setCurrLocation] = useState(null);
-    useEffect(() => {
+
+  // --------------- MapView stuff ----------------- //
+  const [currlocation, setCurrLocation] = useState(null);
+  useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -28,84 +46,32 @@ const MainView = () => {
       }
       let location = await Location.getCurrentPositionAsync({});
       await setCurrLocation(location);
+      //.then fetch listings listings
+      console.log('location: ', location)
+      console.log('currlocation: ', currlocation)
     })();
   }, []);
 
 
   // --------------- GeoCode snippet --------------- //
-  const messageObj = {
-    location:  '153 Morgan Ave, Brooklyn, NY 11237'
-  };
+  // const messageObj = {
+  //   location:  '153 Morgan Ave, Brooklyn, NY 11237'
+  // };
   
-  const geoCode = () => {
-    fetch('http://localhost:3000/geocode', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(messageObj)
-    })
-    .then((response)=>response.json())
-    .then((data)=>
-    console.log(data))
-    .catch(()=>console.log('testRoute Error'))
-  }
-  // ------------------------------------------------- //
-  
-
-
-  // --------------- Amazon s3 snippet --------------- //
-  const [newImg, setNewImg] = useState("");
-  const [images, setImages] = useState([]);
-  const [description, setDescription] = useState('');
-  const [file, setFile] = useState();
-
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImages(result.uri);
-    }
-  };
-
-  const postImage = async ({ image, description })=>{
-    await pickImage
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("description", description);
-
-    const result = await fetch('http://localhost:3000/images/upload', formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
-    const tempResult = result.data;
-    setNewImg(tempResult.imagePath.slice(8));
-    return result.data;
-  }
-
-  async function submit(event) {
-    const result = await postImage({ image: file, description });
-    setImages([result.image, ...images]);
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    submit(event);
-  };
-
-  const fileSelected = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
-  };
-
-    // ------------------------------------------------- //
+  // const geoCode = () => {
+  //   fetch('http://localhost:3000/geocode', {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(messageObj)
+  //   })
+  //   .then((response)=>response.json())
+  //   .then((data)=>
+  //   console.log(data))
+  //   .catch(()=>console.log('testRoute Error'))
+  // }
+   
 
   if (loading) {
     console.log('inside loading')
@@ -145,41 +111,4 @@ export default MainView
 
 
 
-    // ------ MapView -------- //
-
-    // <View style={styles.container}>
-    //   {mapCompo}
-    // </View>
-
-
-
-    // ------ Geocode -------- //
-
-    // <View style={styles.container}>
-    //   <Text>Open up App.js to start working on your app!</Text>
-    //   <Button
-    //     onPress={()=>geoCode()}
-    //   />
-    //   <StatusBar style="auto" />
-    // </View>
-
-
-
-    // ------ Amazon s3 -------- //
-
-    // <View style={styles.container}>
-    //   <Form  //onSubmit={handleSubmit}
-    //   >
-    //   <Input
-    //     type="file"
-    //     accept="image/*"
-    //     //onPress={postImage}
-    //   ></Input>
-      
-    //   <Input
-    //     //onPress={(e) => setDescription(e.target.value)}
-    //     type="text"
-    //   ></Input>
-    //   <Button></Button>
-    // </Form>
-    // </View>
+   

@@ -9,7 +9,7 @@ const router = express.Router();
 
 //base route returns listings based on location 
 router.get('/',
-  geocoderController.getLocation,  
+  geocoderController.getLocation,
   listingController.getListings,
   (req, res) => res.status(200).json(res.locals.listings)
   );
@@ -23,7 +23,7 @@ router.get('/',
 
 */
 router.post('/',
-  geocoderController.getLocation,
+  // geocoderController.getLocation,
   listingController.postListing,
   upload.single('image'), //Accept a single file with the name 'image'. The single file will be stored in req.file 
   imageController.uploadImage,

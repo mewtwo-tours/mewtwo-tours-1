@@ -3,8 +3,10 @@ const db = require('../models/listingModel');
 const listingController = {};
 
 listingController.getListings = async (req, res, next) => {
-  const { latitude, longitude } = res.locals.geocodeResult;
-  const { radius } = req.query;
+  
+  const longitude = req.body.longitude || res.locals.geocodeResult.longitude;
+  const latitude = req.body.latitude || res.locals.geocodeResult.latitude;
+  const  radius = 10 // currently mocked 
 
   //define box around search point, converting miles into degrees
   // 69 miles = ~ 1 degree
@@ -37,6 +39,7 @@ listingController.getListings = async (req, res, next) => {
 };
 
 listingController.postListing = async (req, res, next) => {
+  console.log('entire body:', req.body)
 
   const { 
     title, 
@@ -45,9 +48,10 @@ listingController.postListing = async (req, res, next) => {
     city, 
     state, 
     upvote, 
-    posted_by 
-  } = req.body.listing;
+    // posted_by  <------ mocking user data for now
+  } = req.body.main;
 
+  const posted_by = "f8aad8fe-3b83-11ec-aeff-e504b5473cf2"
   //get string for values to add to image table
   const imageInfo = res.locals.imageInfo;
   const { latitude, longitude } = res.locals.geocodeResult;

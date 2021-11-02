@@ -31,10 +31,12 @@ app.get('/', (req, res) => {
  */
  app.use('*', (req,res) => {
   res.status(404).send('Not Found');
+  console.log('404 Not Found')
 });
 
 // Global error handler
 app.use((err, req, res, next) => {
+  console.log(err)
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error.',
     status: 400,
