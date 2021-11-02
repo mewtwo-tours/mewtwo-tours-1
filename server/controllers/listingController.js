@@ -3,7 +3,8 @@ const db = require('../models/listingModel');
 const listingController = {};
 
 listingController.getListings = async (req, res, next) => {
-  const { latitude, longitude, radius } = req.query;
+  const { latitude, longitude } = res.locals.geocodeResult;
+  const { radius } = req.query;
 
   //define box around search point, converting miles into degrees
   // 69 miles = ~ 1 degree
@@ -43,15 +44,13 @@ listingController.postListing = async (req, res, next) => {
     street_address, 
     city, 
     state, 
-    latitude, 
-    longitude, 
     upvote, 
     posted_by 
   } = req.body.listing;
 
   //get string for values to add to image table
   const imageInfo = res.locals.imageInfo;
-
+  const { latitude, longitude } = res.locals.geocodeResult;
   try{
 
     //using auto-generated uuids for listings
@@ -72,8 +71,6 @@ listingController.postListing = async (req, res, next) => {
         ) returning id;`;
 
     const listings = await db.query(listingQueryString)
-    
-    await db.query(imageQueryString);
     res.locals.listing_id = listings.rows[0];
     
     return next();

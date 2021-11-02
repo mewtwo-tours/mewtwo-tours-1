@@ -33,3 +33,17 @@ sessionController.setSSIDCookie = async (req, res, next) => {
     return next();
   }
   
+  sessionController.checkSession = async (req, res, next) => {
+    if(req.cookies.ssid) {
+      try {
+        const decoded = jwt.verify(req.cookies.ssid, process.env.JWT_KEY);
+        console.log(decoded);
+        res.locals.token = decoded;
+        return next();
+      } catch (error) {
+        return next(error);
+      }
+    }
+    else res.status(500).send({isLoggedIn:false});
+  
+  };

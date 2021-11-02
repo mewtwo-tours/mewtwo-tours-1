@@ -14,7 +14,7 @@ imageController.uploadImage = async (req, res, next) => {
 
   const { description } = req.body
   try{
-     const file = req.file;
+    const file = req.file;
     const result = await uploadFile(file); //Upload the file
     await unlikeFile(file.path); //Delete the file after uploading it to s3
     
