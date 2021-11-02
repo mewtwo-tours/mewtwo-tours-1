@@ -12,6 +12,7 @@
     "@react-navigation/native-stack": "^6.2.5",
     "@reduxjs/toolkit": "^1.6.2",
     "aws-sdk": "^2.1018.0",
+    "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
@@ -20,7 +21,9 @@
     "expo-location": "~13.0.4",
     "expo-status-bar": "~1.1.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.3",
+    "nodemon": "^2.0.14",
     "pg": "^8.7.1",
     "react": "^17.0.1",
     "react-dom": "17.0.1",
@@ -31,9 +34,13 @@
     "react-native-web-image-picker": "0.0.0-alpha.1",
     "react-redux": "^7.2.6",
     "redux": "^4.1.1",
+<<<<<<< HEAD
     "tailwind-rn": "^3.0.1",
     "react-native-screens": "~3.8.0",
     "react-native-safe-area-context": "3.3.2"
+=======
+    "tailwind-rn": "^3.0.1"
+>>>>>>> dev
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
