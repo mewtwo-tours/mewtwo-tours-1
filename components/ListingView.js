@@ -12,8 +12,7 @@ const ListingView = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight
+    flex: 1
   },
   scrollView: {
     backgroundColor: 'pink',

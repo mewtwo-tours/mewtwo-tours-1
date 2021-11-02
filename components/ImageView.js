@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import {
   StyleSheet,
   View,
@@ -6,10 +7,12 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
  } from 'react-native'
 
 import Carousel, { Pagination } from 'react-native-snap-carousel'
+import LocationDetails from './LocationDetails'
 
 const { width } = Dimensions.get('window')
 
@@ -32,7 +35,7 @@ const ImageView = () => {
   ])
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styles.box, styles.debug]}>
       <View style={{flex: 1 / 2, marginTop: 20}}>
         <Carousel
           layout='default'
@@ -42,13 +45,15 @@ const ImageView = () => {
           renderItem={({item, index}) => (
             <Image
               key={index}
-              style={{width: '100%', height: '100%'}}
+              style={{width: '100%', height: '100%', backgroundColor: 'darkorange'}}
               resizeMode='contain'
               source={item.image}
+              PlaceholderContent={<ActivityIndicator />}
           />
         )}
       />
       </View>
+      <LocationDetails />
     </View>
   )
 }
@@ -56,14 +61,24 @@ const ImageView = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'black'
   },
   text: {
     color: 'white',
     fontSize: 32,
     marginTop: 50,
     marginBottom: 25
+  },
+  box: {
+    width: 'auto',
+    height: 10
+  },
+  debug: {
+    borderStyle: 'dotted',
+    borderRadius: 1,
+    borderWidth: 10,
+    borderColor: 'red'
   }
 })
 
