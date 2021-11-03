@@ -40,7 +40,6 @@ const PostCard = (props) => {
     },
     body: JSON.stringify(upvoteMsg)
   })
-    .then(console.log('hello'))
     .catch((err) => console.log('upvoteFn error: ', err))
   }
   
@@ -58,7 +57,6 @@ const PostCard = (props) => {
       },
       body: JSON.stringify(downvoteMsg)
     })
-      .then(console.log('hello'))
       .catch((err) => console.log('downvoteFn error: ', err))
     } 
 
@@ -74,7 +72,6 @@ const PostCard = (props) => {
         <View style={tailwind('w-9 mt-3 mb-7 flex-col justify-center')}>
         <TouchableOpacity
             onPress={()=>{
-              console.log(props.idx)
               upvoteFn(props.idx);
               upvoted ? dispatch(downvote(props.idx)) : dispatch(upvote(props.idx));
               upvoted ? updateScore(score - 1) : updateScore(score + 1);
@@ -87,7 +84,6 @@ const PostCard = (props) => {
           <Text style={tailwind('text-xs')}>{score}</Text>
           <TouchableOpacity
             onPress={()=>{
-              console.log(props.idx)
               downvoteFn(props.idx);
               downvoted ? dispatch(upvote(props.idx)) : dispatch(downvote(props.idx));
               downvoted ? updateScore(score + 1) : updateScore(score - 1);

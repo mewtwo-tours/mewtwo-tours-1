@@ -25,7 +25,8 @@ listingController.getListings = async (req, res, next) => {
       and listings.latitude between ${lowerLat} and ${upperLat}
       ORDER BY images.listing_id;`
 
-    const listings = await db.query(listingQueryString);
+    //const listings = await db.query(listingQueryString);
+    const listings = await db.query('SELECT * FROM listings')
     
     res.locals.listings = listings;
     
@@ -39,7 +40,6 @@ listingController.getListings = async (req, res, next) => {
 };
 
 listingController.postListing = async (req, res, next) => {
-  console.log('entire body:', req.body)
 
   const { 
     title, 

@@ -42,8 +42,7 @@ const CreatePost = () => {
       //await postImage(localUri, fileName, type)
       setFileName(fileNameTemp);
       setType(typeTemp);
-      setLocalUri(localUriTemp);
-      console.log('image stuff:', fileName, type, localUri)
+      setLocalUri(localUriTemp)
     }
   };
   
@@ -66,31 +65,24 @@ const CreatePost = () => {
   //  }
   const sendReq = () => {
 
-    const formData = new FormData();
-    formData.append("image", { uri: localUri, name: fileName, type: type });
-    // formData.append("main", reqBody)
     const reqBody = {
-        
-        //image: images,
-        title: title,
-        description: description,
-        street_address: address,
-        city: city,
-        state: state,
-        upvote: 1,
-        //***HARD CODED */
-        //posted_by: null
-      
+      //image: images,
+      title: title,
+      description: description,
+      street_address: address,
+      city: city,
+      state: state,
+      upvote: 1,
+      //***HARD CODED */
+      //posted_by: null
     }
-    formData.main = reqBody
-    console.log('FORM DATA:', formData)
 
     fetch('http://192.168.1.4:3000/listings', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(reqBody)
     })
     .then((response)=>response.json())
     .then((data)=>

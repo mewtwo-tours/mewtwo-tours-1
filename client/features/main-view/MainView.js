@@ -10,78 +10,66 @@ import * as Location from 'expo-location';
 import NavBar from './NavBar';
 
 const MainView = () => {
-
+  const [currLocation, setCurrLocation] = useState(null);
   const dispatch = useDispatch();
   let currentListings = useSelector((state) => state.listings.currentListings)
-  const { loading } = useSelector((state) => state.listings)
-  console.log(currentListings)
-
-  const fetchListings = () => {
-    const {latitude, longitude} = currlocation.coords;
-    fetch('http://localhost:3000/listings', {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        latitude: latitude,
-        longitude: longitude
-      })
-    })
-    .then((response)=>response.json())
-    .then((data)=>
-    console.log(data))
-    .catch(()=>console.log('fetchListings error'))
-  }
+  //const { loading } = useSelector((state) => state.listings)
+  //console.log(currentListings)
 
 
-  // --------------- MapView stuff ----------------- //
-  const [currlocation, setCurrLocation] = useState(null);
+
+//on mount
+//0 - check current location
+//1 - get current location
+//2 - set current location
+//3 - fetch listings 
+//4 - set listings state
+//5 - set loading to false
+
   useEffect(() => {
-    (async () => {
+    //check location function
+    const checkLoc = async() => {
+
       let { status } = await Location.requestForegroundPermissionsAsync();
+      console.log('status', status)
       if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+        setErrorMsg('Location access denied');
         return;
       }
+      
       let location = await Location.getCurrentPositionAsync({});
-      await setCurrLocation(location);
-      //.then fetch listings listings
-      console.log('location: ', location)
-      console.log('currlocation: ', currlocation)
-    })();
-  }, []);
+      console.log('location,', location)
+      const {latitude, longitude} = location.coords;
 
+      await fetch('http://192.168.1.4:3000/listings/get', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          latitude: latitude,
+          longitude: longitude
+        })
+      })
+      .then((response)=>response.json())
+      .then((data)=>{
+        console.log('*******DATA.rows*******', data.rows); 
+        dispatch(getListings(data.rows))
+        console.log('****CURRENT LISTINGS*****', currentListings)
+      })
+      .catch((e)=>console.log('fetchListings error', e))
+    }
+    checkLoc();
+  }, [])
 
-  // --------------- GeoCode snippet --------------- //
-  // const messageObj = {
-  //   location:  '153 Morgan Ave, Brooklyn, NY 11237'
-  // };
-  
-  // const geoCode = () => {
-  //   fetch('http://localhost:3000/geocode', {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(messageObj)
-  //   })
-  //   .then((response)=>response.json())
-  //   .then((data)=>
-  //   console.log(data))
-  //   .catch(()=>console.log('testRoute Error'))
-  // }
-   
+  // if (loading) {
+  //   console.log('inside loading')
+  //   return (
+  //     <Text style={tailwind('text-3xl')}>LOADING ...............</Text>
+  //   )
 
-  if (loading) {
-    console.log('inside loading')
-    dispatch(getListings(mockData))
-    dispatch(setLoading(false))
-    return (
-      <Text style={tailwind('text-3xl')}>LOADING ...............</Text>
-    )
-
-  } else return (
+  // } else 
+  return (
     <View style={{
       backgroundColor: '#FFA400',
       ...tailwind('h-full w-full flex-col justify-center')}}>
@@ -91,9 +79,9 @@ const MainView = () => {
             key={i}
             idx={i}
             listingId={ele.id}
-            score = {(ele.upvotes - ele.downvotes)}
-            image={ele.image}
-            address={ele.address}
+            score = {(ele.upvote - ele.downvote)}
+            //image={ele.image}
+            address={ele.street_address}
             description={ele.description}
             title={ele.title}
             // upvote={()=>{dispatch(upvote(i))}}

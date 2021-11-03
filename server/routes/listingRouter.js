@@ -8,7 +8,7 @@ const imageController = require('../controllers/imageController');
 const router = express.Router();
 
 //base route returns listings based on location 
-router.get('/',
+router.use('/get',
   geocoderController.getLocation,
   listingController.getListings,
   (req, res) => res.status(200).json(res.locals.listings)
