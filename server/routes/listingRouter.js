@@ -4,11 +4,13 @@ const upload = multer({ dest: 'uploads/' }); // specifying the destination for a
 
 const listingController = require('../controllers/listingController');
 const imageController = require('../controllers/imageController');
+const geocoderController = require('../controllers/geocoderController')
 
 const router = express.Router();
 
 //base route returns listings based on location 
-router.get('/', 
+router.post('/get',
+  geocoderController.getLocation, 
   listingController.getListings,
   (req, res) => res.status(200).json(res.locals.listings)
   );
@@ -22,8 +24,9 @@ router.get('/',
 
 */
 router.post('/',
+  geocoderController.getLocation,
   listingController.postListing,
-  upload.single('image'), //Accept a single file with the name 'image'. The single file will be stored in req.file 
+  // upload.single('image'), //Accept a single file with the name 'image'. The single file will be stored in req.file 
   imageController.uploadImage,
   (req, res) => {
     res.status(200);
