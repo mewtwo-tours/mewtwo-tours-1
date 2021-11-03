@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import tailwind from 'tailwind-rn';
 import PostCard from './PostCard';
@@ -9,12 +9,13 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import NavBar from './NavBar';
 
-const MainView = () => {
+const MainView = ({navigation}) => {
 
+  // console.log('navigation ', navigation.navigate('ListingView'))
   const dispatch = useDispatch();
   let currentListings = useSelector((state) => state.listings.currentListings)
   const { loading } = useSelector((state) => state.listings)
-  console.log(currentListings)
+  // console.log(currentListings)
 
 
     // --------------- MapView stuff ----------------- //
@@ -106,7 +107,9 @@ const MainView = () => {
   };
 
     // ------------------------------------------------- //
-
+  const _onPressCard = () => {
+    console.log('Card clicked')
+  }
   if (loading) {
     console.log('inside loading')
     dispatch(getListings(mockData))
@@ -116,12 +119,13 @@ const MainView = () => {
     )
 
   } else return (
+
     <View style={{
       backgroundColor: '#FFA400',
       ...tailwind('h-full w-full flex-col justify-center')}}>
       <ScrollView style={tailwind('h-full w-full bg-red-100')}>
         {currentListings.map((ele, i) => 
-          <PostCard 
+          <PostCard
             key={i}
             idx={i}
             listingId={ele.id}

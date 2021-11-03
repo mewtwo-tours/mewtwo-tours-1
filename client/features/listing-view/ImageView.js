@@ -20,10 +20,10 @@ const SPACING = 10
 const THUMB_SIZE = 80
 
 const IMAGES = {
-  image1: require('../assets/images/1.jpg'),
-  image2: require('../assets/images/2.jpg'),
-  image3: require('../assets/images/3.jpg'),
-  image4: require('../assets/images/4.jpg')
+  image1: require('./assets/1.jpg'),
+  image2: require('./assets/2.jpg'),
+  image3: require('./assets/3.jpg'),
+  image4: require('./assets/4.jpg')
 }
 
 const ImageView = () => {
@@ -49,6 +49,7 @@ const ImageView = () => {
               resizeMode='contain'
               source={item.image}
               PlaceholderContent={<ActivityIndicator />}
+              onPress={() => console.log('clicked')}
           />
         )}
       />

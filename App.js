@@ -10,6 +10,7 @@ import store from './client/store/store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CreatePost from './client/features/create-post-view/CreatePost';
+import ListingView from './client/features/listing-view/ListingView'
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,10 @@ export default function App() {
           <Stack.Screen
             name="CreatePost"
             component={CreatePost}
+          />
+          <Stack.Screen
+            name="ListingView"
+            component={ListingView}
           />
         </Stack.Navigator>
       </Provider>
