@@ -41,6 +41,7 @@
     "react-redux": "^7.2.6",
     "react-style-proptype": "^3.2.2",
     "redux": "^4.1.1",
+    "tailwind-rn": "^3.0.1",
     "react-native-screens": "~3.8.0"
   },
   "devDependencies": {
