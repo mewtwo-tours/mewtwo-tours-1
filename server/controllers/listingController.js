@@ -3,7 +3,9 @@ const db = require('../models/listingModel');
 const listingController = {};
 
 listingController.getListings = async (req, res, next) => {
-  const { latitude, longitude, radius } = req.query;
+
+  const { latitude, longitude } = req.body;
+  const radius = 10; //constant not user supplied for now
 
   //define box around search point, converting miles into degrees
   // 69 miles = ~ 1 degree
@@ -29,7 +31,7 @@ listingController.getListings = async (req, res, next) => {
     return next();
   } catch(err){
     return next({
-      log: 'listingController.getListings: ERROR: Error fethcing listings',
+      log: 'listingController.getListings: ERROR: Error fetching listings',
       message: { err: `Error occurred in listingController.getListings. err log: ${err}` }
     });
   }
@@ -37,21 +39,21 @@ listingController.getListings = async (req, res, next) => {
 
 listingController.postListing = async (req, res, next) => {
 
+ const { latitude, longitude }  = res.locals.geocodeResult;
+
   const { 
     title, 
     description, 
     street_address, 
     city, 
-    state, 
-    latitude, 
-    longitude, 
+    state,  
     upvote, 
-    posted_by 
-  } = req.body.listing;
+    // posted_by 
+  } = req.body;
 
   //get string for values to add to image table
   const imageInfo = res.locals.imageInfo;
-
+  const posted_by = 'f8aad8fe-3b83-11ec-aeff-e504b5473cf2' // currently hardcoded
   try{
 
     //using auto-generated uuids for listings
@@ -73,13 +75,12 @@ listingController.postListing = async (req, res, next) => {
 
     const listings = await db.query(listingQueryString)
     
-    await db.query(imageQueryString);
-    res.locals.listing_id = listings.rows[0];
-    
+    res.locals.listing_id = listings.rows[0].id;
+    //console.log(res.locals.listing_id)
     return next();
   } catch(err){
     return next({
-      log: 'listingController.postListing: ERROR: Error posting a listing',
+      log: `listingController.postListing: ERROR: Error posting a listing ${err}`,
       message: { err: `Error occurred in listingController.postListing. err log: ${err}` }
     });
   }

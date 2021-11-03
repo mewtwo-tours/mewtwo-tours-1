@@ -35,6 +35,8 @@ app.get('/', (req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
+
+  console.log(err);
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error.',
     status: 400,

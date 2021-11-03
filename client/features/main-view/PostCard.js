@@ -61,13 +61,17 @@ const PostCard = (props) => {
       .then(console.log('hello'))
       .catch((err) => console.log('downvoteFn error: ', err))
     } 
-
+    console.log("props?", props)
+    console.log("key?", props.image)
   return (
     <View style={{backgroundColor: '#F1F2F6', ...tailwind('w-full h-52 border-2 p-2') }}>
       <View style={tailwind(' w-full h-full p-2 flex flex-row justify-between')}>
         {/*onclick to hit individual post route goes here*/}
         <Image 
-          source={props.image}
+          source={{
+            uri: `http://192.168.1.4:3000/images/show/${props.image}`,
+            method: 'GET'
+          }}
           style={tailwind('w-40 h-40')}
         />
          
