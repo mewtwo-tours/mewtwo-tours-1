@@ -8,8 +8,9 @@ const server = 'http://localhost:3000';
 describe('Route integration', () => {
   describe('/listings', () => {
     describe('POST', () => {
-     
-      it('responds with 200 status and text/html content type', () => {
+    //  jest.setTimeout(10000)
+      it('responds with 200 status and sucess message', () => {
+        
         const listingData = {
           
             title: 'test title',
@@ -18,36 +19,40 @@ describe('Route integration', () => {
             city: 'Brooklyn', 
             state:'New York',  
             upvote: 1, 
-            posted_by: '281b44e8-3b84-11ec-aeff-e504b5473cf2'
+            posted_by: '281b44e8-3b84-11ec-aeff-e504b5473cf2',
+            image: '1234567890'
           
         }
         return request(server)
-          .post('/')
-          .send()
-          .expect(200);
+          .post('/listings')
+          .send(listingData)
+          .expect(200)
+          .expect({success:true});
       });
     });
   });
 
   describe('/listings', () => {
-    describe('GET', () => {
+    describe('pos', () => {
       it('responds with 200 status and application/json content type', () => {
+        const body = {
+          latitude: 40.7103902, 
+          longitude: -73.9360982
+        }
         return request(server)
-          .get('/listings')
-          .expect('Content-Type', /json/)
-          .expect(200);
+          .post('/listings/get')
+          .send(body)
+          .expect(200)
+          .expect({});
       });
 
       
-   
-
-
-      it('responds to invalid request with 400 status and error message in body', () => {
+      it('responds to invalid route with 404 error', () => {
                
         return request(server)
           .put('/wrong')
-          .expect(400)
-          .expect({ error: {} });
+          .expect(404)
+          .expect('Not Found');
         
       });
     });
