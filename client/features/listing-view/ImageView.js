@@ -35,7 +35,7 @@ const ImageView = () => {
   ])
 
   return (
-    <View style={[styles.container, styles.box, styles.debug]}>
+    <View style={[styles.container, styles.box]}>
       <View style={{flex: 1 / 2, marginTop: 20}}>
         <Carousel
           layout='default'
@@ -45,7 +45,7 @@ const ImageView = () => {
           renderItem={({item, index}) => (
             <Image
               key={index}
-              style={{width: '100%', height: '100%', backgroundColor: 'darkorange'}}
+              style={{width: '100%', height: '100%'}}
               resizeMode='contain'
               source={item.image}
               PlaceholderContent={<ActivityIndicator />}

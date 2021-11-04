@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, SafeAreaView, ScrollView, StatusBar } from 'react-native'
 import ImageView from './ImageView'
 
-const ListingView = () => {
+const ListingView = ({props}) => {
   return (
     <SafeAreaView style={styles.container}>
       <ImageView />

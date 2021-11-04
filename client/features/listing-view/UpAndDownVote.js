@@ -7,14 +7,17 @@ import {
 } from 'react-native'
 
 const UpAndDownVote = () => {
+
+  const votes = 777
+
   return (
     <View style={[styles.container, styles.row]}>
-      <View style={[styles.debug1, styles.align, styles.locationStats]}>
+      <View style={[styles.align, styles.locationStats]}>
         <Text>
-          Number of Votes
+          Number of {votes} Votes
         </Text>
       </View>
-      <View style={[styles.debug1]}>
+      <View style={[styles.align]}>
         <Icon
           style={[styles.align]}
           name='arrow-up'
@@ -34,8 +37,7 @@ const UpAndDownVote = () => {
 
 const styles = StyleSheet.create({
   align: {
-    // alignSelf: 'flex-end',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center'
   },
   debug1: {
@@ -46,14 +48,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    width: '50%'
+    justifyContent: 'space-evenly',
+    width: 'auto'
   },
   locationStats: {
     flex: 1 / 2,
-    width: '50%'
+    width: 'auto'
   },
   row: {
-    flexDirection: 'row',
     flexWrap: 'wrap'
   }
 })

@@ -1,22 +1,34 @@
 import React from 'react'
 import {
   StyleSheet,
-  View,
-  Text
+  View
 } from 'react-native'
 
 import UpAndDownVote from './UpAndDownVote'
+import { Text } from 'react-native-elements';
+
+const locationDetails = {
+  id: 2,
+  title: "The Anchored Inn",
+  description: "A pirate themed dive bar - cheap drinks by NYC standards, decent food, here are a few more words",
+  address: "57 Waterbury Street, Brooklyn, NY 11206",
+  upvotes: 12830,
+  downvotes: 2000
+}
 
 const LocationDetails = () => {
   return (
-    <View style={[styles.container, styles.box, styles.debug, styles.row]}>
-      <View style={[styles.locationDetailContainer, styles.debug1]}>
+    <View style={[styles.container, styles.box, styles.row]}>
+      <View style={[styles.locationDetailContainer]}>
+        <Text h4>
+          {locationDetails.title}
+        </Text>
         <Text>
-          Location details view
+          {locationDetails.address}
         </Text>
       </View>
 
-      <View style={[styles.locationStats, styles.debug1]}>
+      <View style={[styles.locationStats]}>
         <UpAndDownVote />
       </View>
     </View>
@@ -30,15 +42,13 @@ const styles = StyleSheet.create({
   },
   locationDetailContainer: {
     flex: 1 / 2,
-    width: '50%'
+    width: 'auto'
   },
   locationStats: {
     flex: 1 / 2,
-    width: '50%'
+    width: 'auto'
   },
   box: {
-    // width: 'auto',
-    // width: 100,
     width: '100%',
     height: 10
   },

@@ -8,6 +8,8 @@ import { getListings, selectListings, upvote, downvote, setLoading } from './get
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import NavBar from './NavBar';
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const MainView = ({navigation}) => {
 
@@ -108,7 +110,8 @@ const MainView = ({navigation}) => {
 
     // ------------------------------------------------- //
   const _onPressCard = () => {
-    console.log('Card clicked')
+    console.log('_onPressCard clicked')
+    navigation.navigate('ListingView')
   }
   if (loading) {
     console.log('inside loading')
@@ -136,6 +139,8 @@ const MainView = ({navigation}) => {
             title={ele.title}
             // upvote={()=>{dispatch(upvote(i))}}
             // downvote={()=>{dispatch(downvote(i))}}
+            navigation={_onPressCard}
+            
           />
         )}
       </ScrollView>
