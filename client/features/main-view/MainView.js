@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux'
 import tailwind from 'tailwind-rn';
 import PostCard from './PostCard';
@@ -8,8 +8,10 @@ import { getListings, selectListings, upvote, downvote, setLoading } from './get
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import NavBar from './NavBar';
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const MainView = () => {
+const MainView = ({navigation}) => {
 
   //const [listingsHook, setListingsHook] = useState([])
 
@@ -32,37 +34,44 @@ const MainView = () => {
 //3 - fetch listings 
 //4 - set listings state
 //5 - set loading to false
-const checkLoc = async() => {
+  const checkLoc = async() => {
 
-  let { status } = await Location.requestForegroundPermissionsAsync();
-  console.log('status', status)
-  if (status !== 'granted') {
-    setErrorMsg('Location access denied');
-    return;
-  }
-  console.log('before asyncs')
-  let location = await Location.getCurrentPositionAsync({});
-  console.log('location,', location)
-  const {latitude, longitude} = location.coords;
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log('status', status)
+    if (status !== 'granted') {
+      setErrorMsg('Location access denied');
+      return;
+    }
+    console.log('before asyncs')
+    let location = await Location.getCurrentPositionAsync({});
+    console.log('location,', location)
+    const {latitude, longitude} = location.coords;
 
-  await fetch('http://192.168.1.4:3000/listings/get', {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      latitude: latitude,
-      longitude: longitude
+    await fetch('http://192.168.1.4:3000/listings/get', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        latitude: latitude,
+        longitude: longitude
+      })
     })
-  })
-  .then((response)=>response.json())
-  .then((data)=>{
-    console.log('*******DATA.rows*******', data.rows); 
-    dispatch(getListings(data.rows))
-    //console.log('****CURRENT LISTINGS*****', currentListings)
-  })
-  .catch((e)=>console.log('fetchListings error', e))
-}
+    .then((response)=>response.json())
+    .then((data)=>{
+      console.log('*******DATA.rows*******', data.rows); 
+      dispatch(getListings(data.rows))
+      //console.log('****CURRENT LISTINGS*****', currentListings)
+    })
+    .catch((e)=>console.log('fetchListings error', e))
+  }
+
+  const _onPressCard = (argument) => {
+    console.log('_onPressCard clicked')
+    navigation.navigate('ListingView', {
+      params: argument
+    })
+  }
 
   useEffect(() => {
     //check location function
@@ -70,31 +79,6 @@ const checkLoc = async() => {
   }, [dispatch])
 
 
-/*
-
-  <View style={styles.container}>
-      <Button onPress={()=>pickImage()} title="Press Me"></Button>
-      <Image source={{
-        uri: `http://10.0.0.9:3000/images/show/${keys}`,
-        method: 'GET'
-      }}
-      style={{ width: 400, height: 400 }}
-      />
-    </View>
-
-
-*/
-
-
-
-
-  // if (loading) {
-  //   console.log('inside loading')
-  //   dispatch(getListings(mockData))
-  //   dispatch(setLoading(false))
-  //   return (
-  //     <Text style={tailwind('text-3xl')}>LOADING ...............</Text>
-  //   )
 
   // } else 
   return (
@@ -116,6 +100,7 @@ const checkLoc = async() => {
             title={ele.title}
             // upvote={()=>{dispatch(upvote(i))}}
             // downvote={()=>{dispatch(downvote(i))}}
+            navigation={_onPressCard}
           />
         )}
       </ScrollView>
