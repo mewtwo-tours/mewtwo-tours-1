@@ -6,6 +6,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
+    "test": "jest"
+  },
+  "jest": {
+    "globalSetup": "./jest-setup.js",
+    "globalTeardown": "./jest-teardown.js",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -46,11 +51,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "jest": "^27.3.1",
     "@react-native-community/eslint-config": "^3.0.1",
     "eslint": "^8.1.0",
     "tailwind-rn": "^3.0.1",
     "node-geocoder": "^3.27.0",
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "supertest": "^6.1.6"
   },
   "private": true
 }
