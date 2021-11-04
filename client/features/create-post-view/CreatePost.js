@@ -3,25 +3,73 @@ import { StyleSheet, Text, View, ScrollView, SafeAreaView, TextInput, TouchableO
 import { useSelector, useDispatch } from 'react-redux'
 import tailwind from 'tailwind-rn';
 import ImageUpload from '../image-upload/ImageUpload';
+import * as ImagePicker from 'expo-image-picker';
 import NavBar from '../main-view/NavBar';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons';
 
 const CreatePost = () => {
 
+  const [sent, setSent] = useState(false)
   const [title, createTitle] = useState('');
   const [description, createDescription] = useState('');
   const [address, createAddress] = useState('')
-  //image
+  const [city, createCity] = useState('');
+  const [state, createState] = useState('')
+    // --------------- Amazon s3 snippet --------------- //
+  
+  const [images, setImages] = useState('');
+  
+  const pickImage = async () => {
+   let result = await ImagePicker.launchImageLibraryAsync({
+     mediaTypes: ImagePicker.MediaTypeOptions.All,
+     allowsEditing: true,
+     aspect: [4, 3],
+     quality: 1,
+   });
+   if (!result.cancelled) {
+     let localUri = result.uri;
+     let fileName = localUri.split('/').pop();
+      // Infer the type of the image
+     let match = /\.(\w+)$/.exec(fileName);
+     let type = match ? `image/${match[1]}` : `image`;
+     await postImage(localUri, fileName, type)
+   }
+ };
+
+ const postImage = async (localUri, fileName, type)=>{
+   try{
+   const formData = new FormData();
+   formData.append("image", { uri: localUri, name: fileName, type });
+   const result = await fetch('http://192.168.1.4:3000/images/upload', {
+     method: "POST",
+     headers: { "Content-Type": "multipart/form-data"},
+     body: formData
+   })
+   .then(res=> res.json())
+   .catch(err=>console.log(err))
+   setImages(result.imageKey)
+   }catch(e){
+     console.log("PostImage Err", e)
+   }
+ }
+  // ------------------------------------------------- //
+
+
   const sendReq = () => {
     const reqBody = {
-      image: 'default',
+      image: images,
       title: title,
       description: description,
-      address: address
+      street_address: address,
+      city: city,
+      state: state,
+      upvote: 1,
+      //posted by
     }
+    console.log('reqbody is, ', reqBody)
 
-    fetch('http://localhost:3000/addPost', {
+    fetch('http://192.168.1.4:3000/listings', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,9 +79,27 @@ const CreatePost = () => {
     .then((response)=>response.json())
     .then((data)=>
     console.log(data))
-    .catch(()=>console.log('CreatePost Error, req body is ', reqBody))
+    .catch((e)=>console.log('CreatePost Error, req body is ', reqBody, 'error is, ', e))
   }
   
+  const beforeCreate = 
+  <View style={tailwind('h-20 w-full self-center')}>
+    <Text style={tailwind('text-2xl self-center font-extrabold')}>Create Post</Text>
+      <TouchableOpacity 
+        style={tailwind('self-center')}
+        onPress={() => {sendReq(); setSent(true)}}>
+      <MaterialIcons name="add-business" size={50} color="black" />
+    </TouchableOpacity>
+  </View>        
+  const afterCreate = 
+  <View style={tailwind('h-20 w-full self-center')}>
+  <Text style={tailwind('text-2xl self-center font-extrabold')}>Posted!</Text>
+    <TouchableOpacity 
+      style={tailwind('self-center')}
+      onPress={() => setSent(false)}>
+    <Text>🔥🔥🔥🔥🔥</Text>
+  </TouchableOpacity>
+</View>    
 
   return (
     <View style={{
@@ -53,12 +119,28 @@ const CreatePost = () => {
           value={title}   
         />
         <Text>
-          Location Address
+          Street Address
         </Text>
         <TextInput
         style={tailwind('h-8 w-60 border-2 ml-2.5')}
           onChangeText={createAddress}
           value={address}   
+        />
+        <Text>
+          City
+        </Text>
+        <TextInput
+        style={tailwind('h-8 w-60 border-2 ml-2.5')}
+          onChangeText={createCity}
+          value={city}   
+        />
+        <Text>
+          State
+        </Text>
+        <TextInput
+        style={tailwind('h-8 w-60 border-2 ml-2.5')}
+          onChangeText={createState}
+          value={state}   
         />
         <Text>
           Short Description
@@ -71,17 +153,19 @@ const CreatePost = () => {
           value={description}   
         />
         <Text>Add Image</Text>
-        <TouchableOpacity style={tailwind('ml-2.5')}>
+        <TouchableOpacity 
+          style={tailwind('ml-2.5')}
+          onPress={()=>pickImage()}>
           <Ionicons name="image-outline" size={30} color="black" />
         </TouchableOpacity>
-        
-        <View style={tailwind('h-20 w-full self-center')}>
+        {sent ? afterCreate : beforeCreate}
+        {/* <View style={tailwind('h-20 w-full self-center')}>
           <Text style={tailwind('text-2xl self-center font-extrabold')}>Create Post</Text>
           <TouchableOpacity style={tailwind('self-center')}
             onPress={() => sendReq()}>
             <MaterialIcons name="add-business" size={50} color="black" />
           </TouchableOpacity>
-        </View>        
+        </View>         */}
       </ScrollView>
       <NavBar></NavBar>
     </View>

@@ -61,14 +61,18 @@ const PostCard = (props) => {
     })
       .then(console.log('hello'))
       .catch((err) => console.log('downvoteFn error: ', err))
-  }
-
+    } 
+    console.log("props?", props)
+    console.log("key?", props.image)
   return (
     <View style={{backgroundColor: '#F1F2F6', ...tailwind('w-full h-52 border-2 p-2') }}>
       <View style={tailwind(' w-full h-full p-2 flex flex-row justify-between')}>
-        {/*onclick to hit individual post route goes here */}
-        <Image
-          source={props.image}
+        {/*onclick to hit individual post route goes here*/}
+        <Image 
+          source={{
+            uri: `http://192.168.1.4:3000/images/show/${props.image}`,
+            method: 'GET'
+          }}
           style={tailwind('w-40 h-40')}
           onPress={() => console.log('clcked ')}
         />
@@ -84,9 +88,9 @@ const PostCard = (props) => {
             }}
           style={tailwind('items-center')}
           >
-          {upvoted ? upvoteFull : upvoteEmpty}
-        </TouchableOpacity>
-          <Text style={tailwind('text-xs')}>{score}</Text>
+            {upvoted ? upvoteFull : upvoteEmpty}
+          </TouchableOpacity>
+          <Text style={tailwind('text-sm ml-1 font-bold')}>{score}</Text>
           <TouchableOpacity
             onPress={() => {
               console.log(props.idx)
@@ -103,6 +107,7 @@ const PostCard = (props) => {
 
         <View style={tailwind('w-48 mb-2 ml-2 mr-2')}>
           <Text style={{color: '#020100', ...tailwind('text-lg font-bold')}}>{props.title}</Text>
+          <Text style={{color: '#FFA400', ...tailwind('text-sm font-bold italic')}}>{props.city}</Text>
           <Text style={{color: '#FFA400', ...tailwind('text-xs font-bold')}}>{props.address}</Text>
           <Text style={tailwind('text-xs mt-3 italic pr-2')}>{props.description}</Text>
           <Button

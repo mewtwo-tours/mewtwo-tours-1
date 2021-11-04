@@ -13,128 +13,112 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const MainView = ({navigation}) => {
 
-  // console.log('navigation ', navigation.navigate('ListingView'))
+  //const [listingsHook, setListingsHook] = useState([])
+
   const dispatch = useDispatch();
   let currentListings = useSelector((state) => state.listings.currentListings)
   const { loading } = useSelector((state) => state.listings)
-  // console.log(currentListings)
+  console.log(currentListings)
+  //let sorted = currentListings.sort((a, b)=> b.upvote - a.upvote);
+  const sorted = [].concat(currentListings).sort((a, b)=> b.upvote - a.upvote)
+  console.log('sorted', sorted)
 
 
     // --------------- MapView stuff ----------------- //
     const [currlocation, setCurrLocation] = useState(null);
-    useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({});
-      await setCurrLocation(location);
-    })();
-  }, []);
+    const [reloading, setReloading] = useState(false);
+    //on mount
+//0 - check current location
+//1 - get current location
+//2 - set current location
+//3 - fetch listings 
+//4 - set listings state
+//5 - set loading to false
+  const checkLoc = async() => {
 
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log('status', status)
+    if (status !== 'granted') {
+      setErrorMsg('Location access denied');
+      return;
+    }
+    console.log('before asyncs')
+    let location = await Location.getCurrentPositionAsync({});
+    console.log('location,', location)
+    const {latitude, longitude} = location.coords;
 
-  // --------------- GeoCode snippet --------------- //
-  const messageObj = {
-    location:  '153 Morgan Ave, Brooklyn, NY 11237'
-  };
-  
-  const geoCode = () => {
-    fetch('http://localhost:3000/geocode', {
+    await fetch('http://192.168.1.4:3000/listings/get', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(messageObj)
+      body: JSON.stringify({
+        latitude: latitude,
+        longitude: longitude
+      })
     })
     .then((response)=>response.json())
-    .then((data)=>
-    console.log(data))
-    .catch(()=>console.log('testRoute Error'))
-  }
-  // ------------------------------------------------- //
-  
-
-
-  // --------------- Amazon s3 snippet --------------- //
-  const [newImg, setNewImg] = useState("");
-  const [images, setImages] = useState([]);
-  const [description, setDescription] = useState('');
-  const [file, setFile] = useState();
-
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImages(result.uri);
-    }
-  };
-
-  const postImage = async ({ image, description })=>{
-    await pickImage
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("description", description);
-
-    const result = await fetch('http://localhost:3000/images/upload', formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+    .then((data)=>{
+      console.log('*******DATA.rows*******', data.rows); 
+      dispatch(getListings(data.rows))
+      //console.log('****CURRENT LISTINGS*****', currentListings)
     })
-    const tempResult = result.data;
-    setNewImg(tempResult.imagePath.slice(8));
-    return result.data;
+    .catch((e)=>console.log('fetchListings error', e))
   }
 
-  async function submit(event) {
-    const result = await postImage({ image: file, description });
-    setImages([result.image, ...images]);
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    submit(event);
-  };
-
-  const fileSelected = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
-  };
-
-    // ------------------------------------------------- //
   const _onPressCard = () => {
     console.log('_onPressCard clicked')
     navigation.navigate('ListingView')
   }
-  if (loading) {
-    console.log('inside loading')
-    dispatch(getListings(mockData))
-    dispatch(setLoading(false))
-    return (
-      <Text style={tailwind('text-3xl')}>LOADING ...............</Text>
-    )
 
-  } else return (
+  useEffect(() => {
+    //check location function
+    checkLoc();
+  }, [dispatch])
 
+
+/*
+
+  <View style={styles.container}>
+      <Button onPress={()=>pickImage()} title="Press Me"></Button>
+      <Image source={{
+        uri: `http://10.0.0.9:3000/images/show/${keys}`,
+        method: 'GET'
+      }}
+      style={{ width: 400, height: 400 }}
+      />
+    </View>
+
+
+*/
+
+
+
+
+  // if (loading) {
+  //   console.log('inside loading')
+  //   dispatch(getListings(mockData))
+  //   dispatch(setLoading(false))
+  //   return (
+  //     <Text style={tailwind('text-3xl')}>LOADING ...............</Text>
+  //   )
+
+  // } else 
+  return (
     <View style={{
       backgroundColor: '#FFA400',
       ...tailwind('h-full w-full flex-col justify-center')}}>
       <ScrollView style={tailwind('h-full w-full bg-red-100')}>
-        {currentListings.map((ele, i) => 
-          <PostCard
+        {sorted.map((ele, i) => 
+          <PostCard 
             key={i}
             idx={i}
             listingId={ele.id}
-            score = {(ele.upvotes - ele.downvotes)}
-            image={ele.image}
-            address={ele.address}
+            score = {(ele.upvote - ele.downvote)}
+            image={ele.key}
+            address={ele.street_address}
+            city={ele.city}
+            state={ele.state}
             description={ele.description}
             title={ele.title}
             // upvote={()=>{dispatch(upvote(i))}}
@@ -144,7 +128,11 @@ const MainView = ({navigation}) => {
           />
         )}
       </ScrollView>
-      <NavBar></NavBar>
+      <NavBar
+        setReloading={setReloading}
+        reloading={reloading}
+      >
+        </NavBar>
     </View>
 
   )

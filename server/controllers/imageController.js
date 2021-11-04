@@ -10,26 +10,28 @@ const imageController = {};
 imageController.getImage = async (req, res, next) => {
 
 }
+//uploades image key to db for later retrieval
 imageController.uploadImage = async (req, res, next) => {
 
-  const { description } = req.body
+  const description  = req.body.description
+  const { image: key } = req.body;
   try{
-     const file = req.file;
-    const result = await uploadFile(file); //Upload the file
-    await unlikeFile(file.path); //Delete the file after uploading it to s3
+    //  const file = req.file;
+    // const result = await uploadFile(file); //Upload the file
+    // await unlikeFile(file.path); //Delete the file after uploading it to s3
     
    
     const imageQueryString = 
     `INSERT INTO images 
     (description, listing_id, key) 
-    VALUES ('${description}', '${res.locals.listing_id}', '${result.key}');`;
+    VALUES ('${description}', '${res.locals.listing_id}', '${key}');`;
 
     await db.query(imageQueryString)
     return next();
   }
   catch(err){
     return next({
-      log: 'imageController.uploadImage: ERROR: Error uploading image',
+      log: 'imageController.uploadImage: ERROR: Error uploading image key to database',
       message: { err: `Error occurred in imageController.uploadImage. err log: ${err}` }
     });
   }

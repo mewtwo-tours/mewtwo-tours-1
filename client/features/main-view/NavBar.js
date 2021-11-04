@@ -4,7 +4,7 @@ import tailwind from 'tailwind-rn';
 import { Ionicons } from '@expo/vector-icons'; 
 import { useNavigation } from '@react-navigation/native';
 
-const NavBar = () => {
+const NavBar = (props) => {
   
   const navigation = useNavigation()
 
@@ -14,6 +14,11 @@ const NavBar = () => {
           style={tailwind('self-center')}
           onPress={() => navigation.navigate('Main')}>
           <Ionicons name="home-outline" size={40} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={tailwind('self-center')}
+          onPress={() => props.setReloading(!props.reloading)}>
+          <Ionicons name="reload-outline" size={40} color="black" />
         </TouchableOpacity>
         <TouchableOpacity
           style={tailwind('self-center')}
