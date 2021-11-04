@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const CreatePost = () => {
 
+  const [sent, setSent] = useState(false)
   const [title, createTitle] = useState('');
   const [description, createDescription] = useState('');
   const [address, createAddress] = useState('')
@@ -81,6 +82,24 @@ const CreatePost = () => {
     .catch((e)=>console.log('CreatePost Error, req body is ', reqBody, 'error is, ', e))
   }
   
+  const beforeCreate = 
+  <View style={tailwind('h-20 w-full self-center')}>
+    <Text style={tailwind('text-2xl self-center font-extrabold')}>Create Post</Text>
+      <TouchableOpacity 
+        style={tailwind('self-center')}
+        onPress={() => {sendReq(); setSent(true)}}>
+      <MaterialIcons name="add-business" size={50} color="black" />
+    </TouchableOpacity>
+  </View>        
+  const afterCreate = 
+  <View style={tailwind('h-20 w-full self-center')}>
+  <Text style={tailwind('text-2xl self-center font-extrabold')}>Posted!</Text>
+    <TouchableOpacity 
+      style={tailwind('self-center')}
+      onPress={() => setSent(false)}>
+    <Text>🔥🔥🔥🔥🔥</Text>
+  </TouchableOpacity>
+</View>    
 
   return (
     <View style={{
@@ -139,14 +158,14 @@ const CreatePost = () => {
           onPress={()=>pickImage()}>
           <Ionicons name="image-outline" size={30} color="black" />
         </TouchableOpacity>
-        
-        <View style={tailwind('h-20 w-full self-center')}>
+        {sent ? afterCreate : beforeCreate}
+        {/* <View style={tailwind('h-20 w-full self-center')}>
           <Text style={tailwind('text-2xl self-center font-extrabold')}>Create Post</Text>
           <TouchableOpacity style={tailwind('self-center')}
             onPress={() => sendReq()}>
             <MaterialIcons name="add-business" size={50} color="black" />
           </TouchableOpacity>
-        </View>        
+        </View>         */}
       </ScrollView>
       <NavBar></NavBar>
     </View>
