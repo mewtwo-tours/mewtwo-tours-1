@@ -119,7 +119,7 @@ const PostCard = (props) => {
                 />
             }
             title='View Listing'
-            onPress={() => props.navigation()}
+            onPress={() => props.navigation(props)}
             />
         </View>
       </View>

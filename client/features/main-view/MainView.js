@@ -66,9 +66,11 @@ const MainView = ({navigation}) => {
     .catch((e)=>console.log('fetchListings error', e))
   }
 
-  const _onPressCard = () => {
+  const _onPressCard = (argument) => {
     console.log('_onPressCard clicked')
-    navigation.navigate('ListingView')
+    navigation.navigate('ListingView', {
+      params: argument
+    })
   }
 
   useEffect(() => {
@@ -77,31 +79,6 @@ const MainView = ({navigation}) => {
   }, [dispatch])
 
 
-/*
-
-  <View style={styles.container}>
-      <Button onPress={()=>pickImage()} title="Press Me"></Button>
-      <Image source={{
-        uri: `http://10.0.0.9:3000/images/show/${keys}`,
-        method: 'GET'
-      }}
-      style={{ width: 400, height: 400 }}
-      />
-    </View>
-
-
-*/
-
-
-
-
-  // if (loading) {
-  //   console.log('inside loading')
-  //   dispatch(getListings(mockData))
-  //   dispatch(setLoading(false))
-  //   return (
-  //     <Text style={tailwind('text-3xl')}>LOADING ...............</Text>
-  //   )
 
   // } else 
   return (
@@ -124,7 +101,6 @@ const MainView = ({navigation}) => {
             // upvote={()=>{dispatch(upvote(i))}}
             // downvote={()=>{dispatch(downvote(i))}}
             navigation={_onPressCard}
-            
           />
         )}
       </ScrollView>

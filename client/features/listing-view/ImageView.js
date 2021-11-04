@@ -19,6 +19,8 @@ const { width } = Dimensions.get('window')
 const SPACING = 10
 const THUMB_SIZE = 80
 
+
+
 const IMAGES = {
   image1: require('./assets/1.jpg'),
   image2: require('./assets/2.jpg'),
@@ -26,9 +28,12 @@ const IMAGES = {
   image4: require('./assets/4.jpg')
 }
 
-const ImageView = () => {
+const ImageView = (props) => {
   const [images, setImages] = useState([
-    {id: 1, image: IMAGES.image1},
+    {id: 1, image: {
+      uri: `http://192.168.1.4:3000/images/show/${props.data.params.image}`,
+      method: 'GET'
+      }},
     {id: 2, image: IMAGES.image2},
     {id: 3, image: IMAGES.image3},
     {id: 4, image: IMAGES.image4}
@@ -54,7 +59,8 @@ const ImageView = () => {
         )}
       />
       </View>
-      <LocationDetails />
+      <LocationDetails
+        data={props.data} />
     </View>
   )
 }

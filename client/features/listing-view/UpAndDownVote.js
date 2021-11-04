@@ -6,7 +6,7 @@ import {
   Text
 } from 'react-native'
 
-const UpAndDownVote = () => {
+const UpAndDownVote = (props) => {
 
   const votes = 777
 
@@ -14,7 +14,7 @@ const UpAndDownVote = () => {
     <View style={[styles.container, styles.row]}>
       <View style={[styles.align, styles.locationStats]}>
         <Text>
-          Number of {votes} Votes
+          Number of {props.score} Votes
         </Text>
       </View>
       <View style={[styles.align]}>

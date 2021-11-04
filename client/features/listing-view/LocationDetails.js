@@ -16,20 +16,22 @@ const locationDetails = {
   downvotes: 2000
 }
 
-const LocationDetails = () => {
+const LocationDetails = (props) => {
+  console.log('loc details props', props)
   return (
     <View style={[styles.container, styles.box, styles.row]}>
       <View style={[styles.locationDetailContainer]}>
         <Text h4>
-          {locationDetails.title}
+          {props.data.params.title}
         </Text>
         <Text>
-          {locationDetails.address}
+          {props.data.params.address + ' ' + props.data.params.city}
         </Text>
       </View>
 
       <View style={[styles.locationStats]}>
-        <UpAndDownVote />
+        <UpAndDownVote 
+          score={props.data.params.score}/>
       </View>
     </View>
   )
