@@ -11,14 +11,20 @@ import NavBar from './NavBar';
 
 const MainView = () => {
 
+  //const [listingsHook, setListingsHook] = useState([])
+
   const dispatch = useDispatch();
   let currentListings = useSelector((state) => state.listings.currentListings)
   const { loading } = useSelector((state) => state.listings)
   console.log(currentListings)
+  //let sorted = currentListings.sort((a, b)=> b.upvote - a.upvote);
+  const sorted = [].concat(currentListings).sort((a, b)=> b.upvote - a.upvote)
+  console.log('sorted', sorted)
 
 
     // --------------- MapView stuff ----------------- //
     const [currlocation, setCurrLocation] = useState(null);
+    const [reloading, setReloading] = useState(false);
     //on mount
 //0 - check current location
 //1 - get current location
@@ -26,42 +32,42 @@ const MainView = () => {
 //3 - fetch listings 
 //4 - set listings state
 //5 - set loading to false
+const checkLoc = async() => {
+
+  let { status } = await Location.requestForegroundPermissionsAsync();
+  console.log('status', status)
+  if (status !== 'granted') {
+    setErrorMsg('Location access denied');
+    return;
+  }
+  console.log('before asyncs')
+  let location = await Location.getCurrentPositionAsync({});
+  console.log('location,', location)
+  const {latitude, longitude} = location.coords;
+
+  await fetch('http://192.168.1.4:3000/listings/get', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      latitude: latitude,
+      longitude: longitude
+    })
+  })
+  .then((response)=>response.json())
+  .then((data)=>{
+    console.log('*******DATA.rows*******', data.rows); 
+    dispatch(getListings(data.rows))
+    //console.log('****CURRENT LISTINGS*****', currentListings)
+  })
+  .catch((e)=>console.log('fetchListings error', e))
+}
 
   useEffect(() => {
     //check location function
-    const checkLoc = async() => {
-
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      console.log('status', status)
-      if (status !== 'granted') {
-        setErrorMsg('Location access denied');
-        return;
-      }
-      
-      let location = await Location.getCurrentPositionAsync({});
-      console.log('location,', location)
-      const {latitude, longitude} = location.coords;
-
-      await fetch('http://192.168.1.4:3000/listings/get', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          latitude: latitude,
-          longitude: longitude
-        })
-      })
-      .then((response)=>response.json())
-      .then((data)=>{
-        console.log('*******DATA.rows*******', data.rows); 
-        dispatch(getListings(data.rows))
-        console.log('****CURRENT LISTINGS*****', currentListings)
-      })
-      .catch((e)=>console.log('fetchListings error', e))
-    }
     checkLoc();
-  }, [])
+  }, [dispatch])
 
 
 /*
@@ -96,14 +102,16 @@ const MainView = () => {
       backgroundColor: '#FFA400',
       ...tailwind('h-full w-full flex-col justify-center')}}>
       <ScrollView style={tailwind('h-full w-full bg-red-100')}>
-        {currentListings.map((ele, i) => 
+        {sorted.map((ele, i) => 
           <PostCard 
             key={i}
             idx={i}
             listingId={ele.id}
             score = {(ele.upvote - ele.downvote)}
             image={ele.key}
-            address={ele.address}
+            address={ele.street_address}
+            city={ele.city}
+            state={ele.state}
             description={ele.description}
             title={ele.title}
             // upvote={()=>{dispatch(upvote(i))}}
@@ -111,7 +119,11 @@ const MainView = () => {
           />
         )}
       </ScrollView>
-      <NavBar></NavBar>
+      <NavBar
+        setReloading={setReloading}
+        reloading={reloading}
+      >
+        </NavBar>
     </View>
 
   )

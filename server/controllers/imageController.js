@@ -13,7 +13,7 @@ imageController.getImage = async (req, res, next) => {
 //uploades image key to db for later retrieval
 imageController.uploadImage = async (req, res, next) => {
 
-  const description  = "Hello everybody"
+  const description  = req.body.description
   const { image: key } = req.body;
   try{
     //  const file = req.file;

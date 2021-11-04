@@ -88,7 +88,7 @@ const PostCard = (props) => {
           >
             {upvoted ? upvoteFull : upvoteEmpty}
           </TouchableOpacity>
-          <Text style={tailwind('text-xs')}>{score}</Text>
+          <Text style={tailwind('text-sm ml-1 font-bold')}>{score}</Text>
           <TouchableOpacity
             onPress={()=>{
               console.log(props.idx)
@@ -105,6 +105,7 @@ const PostCard = (props) => {
 
         <View style={tailwind('w-48 mb-2 ml-2 mr-2')}>
           <Text style={{color: '#020100', ...tailwind('text-lg font-bold')}}>{props.title}</Text>
+          <Text style={{color: '#FFA400', ...tailwind('text-sm font-bold italic')}}>{props.city}</Text>
           <Text style={{color: '#FFA400', ...tailwind('text-xs font-bold')}}>{props.address}</Text>
           <Text style={tailwind('text-xs mt-3 italic pr-2')}>{props.description}</Text>
         </View>
